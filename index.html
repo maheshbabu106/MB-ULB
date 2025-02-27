@@ -378,9 +378,9 @@ fetch("https://script.google.com/macros/s/AKfycbxYz0n1x02KFqXDIPJJKRltgKlKquFhY4
     reasons: "Shortage"
   })
 })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error("Error:", error));
+.then(response => response.json())
+.then(data => console.log("Response:", data))
+.catch(error => console.error("Fetch error:", error));
 
         }
     </script>

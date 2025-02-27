@@ -364,15 +364,24 @@
                 });
             }
 
-            fetch(scriptURL, {
-                method: "POST",
-                body: JSON.stringify(formData),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => alert("Data Saved Successfully!"))
-            .catch(error => alert("Error Saving Data!"));
+            fetchfetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    ceSection: "Example",
+    division: "A",
+    ulb: "ULB Name",
+    demand: "500",
+    supply: "450",
+    reasons: "Shortage"
+  })
+})
+            .then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error("Error:", error));
+
         }
     </script>
 

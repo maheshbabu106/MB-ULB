@@ -364,7 +364,7 @@
                 });
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbxEn2YhY_y1OJiWW_BlFhk1cgSa0ZU1cDLEM2tMTNxOk1F5_A37083aXRtWIBRyhE_7/exec", {
+fetch("https://script.google.com/macros/s/AKfycbxEn2YhY_y1OJiWW_BlFhk1cgSa0ZU1cDLEM2tMTNxOk1F5_A37083aXRtWIBRyhE_7/exec", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -379,8 +379,8 @@
   })
 })
             .then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error("Error:", error));
+            .then(data => console.log(data))
+            .catch(error => console.error("Error:", error));
 
         }
     </script>

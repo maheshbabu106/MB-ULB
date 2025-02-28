@@ -21,9 +21,18 @@
             color: rgba(0, 81, 255, 0.897);
         }
     </style>
+    
 </head>
 <body>
 <h1>ULB Bulk Supply Entry</h1>
+<div id="dtdrop" > 
+<label for="SupplyDate">Select Supply Date:</label>
+<select id="SupplyDate" onchange="updateDates()">
+    <option value="Today">today</option>
+    <option value="Yesterday">yesterday</option>
+</select>
+</div> 
+
     <label for="ceSection">Select CE Section:</label>
     <select id="ceSection" onchange="updateDivisions()">
         <option value="">-- Select --</option>
@@ -56,11 +65,36 @@
             <!-- Rows will be dynamically inserted here -->
         </tbody>
     </table>
+    <div>
+    <label for="Passcode">Enter your passcode:</label>
+    <input type="text" id="name" name="name" required minlength="6" maxlength="8" size="10" />
+    </div>
 
-    <button onclick="submitForm()">Submit</button>
+    <div><button onclick="submitData()">Submit</button></div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyfN9F82ii-ERmIEDMtcAVIkIs0prxr2lvP1OcV3FM3m73y5AMcgf3QGixu_WbzB_30/exec"; // Replace with your Apps Script URL
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwEC7Rlh5HaUQYGpf6PrTI0NNgc3uo19LTFp4yFjWuH0YNUnSoulRmFwQK4n9qDTNsh/exec"; // Replace with your Apps Script URL
+
+    document.addEventListener("DOMContentLoaded", function () {
+    function updateDates() {
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        const formatDate = (date) => {
+            return date.toISOString().split('T')[0].split('-').reverse().join('-');
+        };
+
+        document.getElementById("SupplyDate").innerHTML = `
+            <option value="Today">${formatDate(today)}</option>
+            <option value="Yesterday">${formatDate(yesterday)}</option>
+        `;
+    }
+
+    updateDates();
+});
+
+
 
         const data = {
             "1": {
@@ -324,65 +358,48 @@
             }
         }
 
-        function submitForm() {
-            let ceSection = document.getElementById("ceSection").value;
-            let division = document.getElementById("division").value;
-            let table = document.getElementById("dataTable");
-            let rows = table.getElementsByTagName("tr");
 
-            if (!ceSection || !division) {
-                alert("Please select CE Section and Division first!");
-                return;
-            }
+        function submitData() {
+    var passcode = document.querySelector("input[name='passcode']").value;
 
-            let formData = [];
+    var formData = new FormData();
+    formData.append("date", document.querySelector("select[name='supply_date']").value);
+    formData.append("ce_section", document.querySelector("select[name='ce_section']").value);
+    formData.append("division", document.querySelector("select[name='division']").value);
+    formData.append("passcode", passcode);  
 
-            for (let i = 0; i < rows.length; i++) {
-                let cols = rows[i].getElementsByTagName("td");
-                let supplyInput = cols[2].querySelector("input").value.trim();
-                let reasonsInput = cols[3].querySelector("input").value.trim();
+    document.querySelectorAll("table tr").forEach((row, index) => {
+        if (index === 0) return; 
+        
+        var ulb = row.cells[0].innerText;
+        var demand = row.cells[1].innerText;
+        var supply = row.cells[2].querySelector("input").value;
+        var reasons = row.cells[3].querySelector("input").value;
+        
+        formData.append("ulb", ulb);
+        formData.append("demand", demand);
+        formData.append("supply", supply);
+        formData.append("reasons", reasons);
+    });
 
-                // Ensure Supply is a valid float
-                if (supplyInput === "" || isNaN(parseFloat(supplyInput))) {
-                    alert("Supply must be a valid number.");
-                    return;
-                }
-
-                // Ensure Reasons is within 999 characters
-                if (reasonsInput.length > 999) {
-                    alert("Reasons must be 999 characters or less.");
-                    return;
-                }
-
-                formData.push({
-                    ceSection: ceSection,
-                    division: division,
-                    ulb: cols[0].innerText,
-                    demand: cols[1].innerText,
-                    supply: parseFloat(supplyInput),  // Convert to Float
-                    reasons: reasonsInput
-                });
-            }
-
-fetch("https://script.google.com/macros/s/AKfycbyfN9F82ii-ERmIEDMtcAVIkIs0prxr2lvP1OcV3FM3m73y5AMcgf3QGixu_WbzB_30/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    ceSection: "Example",
-    division: "A",
-    ulb: "ULB Name",
-    demand: "500",
-    supply: "450",
-    reasons: "Shortage"
-  })
-})
-.then(response => response.json())
-.then(data => console.log("Response:", data))
-.catch(error => console.error("Fetch error:", error));
-
+    fetch("https://script.google.com/macros/s/AKfycbwEC7Rlh5HaUQYGpf6PrTI0NNgc3uo19LTFp4yFjWuH0YNUnSoulRmFwQK4n9qDTNsh/exec", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(result => {
+        if (result.toLowerCase().includes("success")) {
+            alert("Data submitted successfully!");
+        } else {
+            alert("Submission failed: " + result);
         }
+    })
+    .catch(error => {
+        alert("Error submitting data. Please try again.\nError: " + error);
+    });
+}
+
+
     </script>
 
 </body>

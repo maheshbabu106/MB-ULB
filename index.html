@@ -25,7 +25,7 @@
 </head>
 <body>
 <h1>ULB Bulk Supply Entry</h1>
-<div id="dtdrop" > 
+<div> 
 <label for="SupplyDate">Select Supply Date:</label>
 <select id="SupplyDate" onchange="updateDates()">
     <option value="Today">today</option>
@@ -357,7 +357,7 @@
 
     function submitData() {
     var formData = new FormData();
-    formData.append("date", document.querySelector("select[name='SupplyDate']").value);
+    formData.append("date", document.getElementById("SupplyDate").value);
     formData.append("ce_section", document.querySelector("select[name='ceSection']").value);
     formData.append("division", document.querySelector("select[name='division']").value);  
 

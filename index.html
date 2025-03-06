@@ -359,8 +359,7 @@
     var formData = new FormData();
     formData.append("date", document.querySelector("select[name='supply_date']").value);
     formData.append("ce_section", document.querySelector("select[name='ce_section']").value);
-    formData.append("division", document.querySelector("select[name='division']").value);
-    formData.append("passcode", passcode);  
+    formData.append("division", document.querySelector("select[name='division']").value);  
 
     document.querySelectorAll("table tr").forEach((row, index) => {
         if (index === 0) return; 

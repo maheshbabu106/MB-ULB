@@ -357,8 +357,8 @@
 
     function submitData() {
     var formData = new FormData();
-    formData.append("date", document.querySelector("select[name='supply_date']").value);
-    formData.append("ce_section", document.querySelector("select[name='ce_section']").value);
+    formData.append("date", document.querySelector("select[name='SupplyDate']").value);
+    formData.append("ce_section", document.querySelector("select[name='ceSection']").value);
     formData.append("division", document.querySelector("select[name='division']").value);  
 
     document.querySelectorAll("table tr").forEach((row, index) => {
